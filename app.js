@@ -9,4 +9,21 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 })
 
+io.on('connection', (client) => {
+  console.log('client connected...');
+
+  client.on('join', (data) => {
+    console.log(data);
+    client.emit('messages', 'Hello from server');
+  })
+  
+  client.on('messages', (data) => {
+    client.emit('broad', data);
+    client.broadcast.emit('broad',data);
+  })
+
+})
+
+
+
 server.listen(8080);
